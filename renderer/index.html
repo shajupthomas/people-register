@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; img-src 'self'; script-src 'self';" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>People's Register — St. Alphonsa Church</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="icon.png" alt="" class="brand-mark" />
+        <div>
+          <div class="brand-title">People's Register</div>
+          <div class="brand-sub">St. Alphonsa Church</div>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Sections">
+        <button class="nav-btn active" type="button" data-view="register"><span><i class="dot gold"></i>Register</span></button>
+        <button class="nav-btn" type="button" data-view="members"><span><i class="dot teal"></i>Members</span><span class="badge" id="memberCount">0</span></button>
+        <button class="nav-btn" type="button" data-view="certificate"><span><i class="dot rose"></i>Certificate</span></button>
+        <button class="nav-btn" type="button" data-view="settings"><span><i class="dot violet"></i>Parish Settings</span></button>
+      </nav>
+      <footer class="sidebar-foot">
+        <strong>Kankanady, Mangalore</strong>
+        <span>Eparchy of Belthangady</span>
+        <span>+91 824 2432209</span>
+      </footer>
+    </aside>
+
+    <main>
+      <section id="view-register" class="view active">
+        <div class="hero">
+          <img src="emblem.png" alt="Gold cross of St. Alphonsa Church" class="emblem" />
+          <div>
+            <h1 id="formTitle">Register a member</h1>
+            <p class="lede">St. Alphonsa Syro-Malabar Church keeps this people's register on this computer. Registration date is filled with today, and you can change it.</p>
+          </div>
+        </div>
+        <p id="editingNote" class="note" hidden>You are editing a saved member.</p>
+        <p id="formError" class="banner" hidden></p>
+        <form id="memberForm" class="card" autocomplete="off" novalidate>
+          <div class="form-grid">
+            <label class="field">
+              <span>Baptism Name</span>
+              <input name="baptism_name" maxlength="80" required placeholder="Thomas" />
+            </label>
+            <label class="field">
+              <span>House Name</span>
+              <input name="house_name" maxlength="80" required placeholder="Palamattam" />
+            </label>
+            <label class="field">
+              <span>Father's Name</span>
+              <input name="father_name" maxlength="80" required />
+            </label>
+            <label class="field">
+              <span>Mother's Name</span>
+              <input name="mother_name" maxlength="80" required />
+            </label>
+            <fieldset class="field span-2">
+              <legend>Gender Selection</legend>
+              <div class="gender">
+                <label class="choice male">
+                  <input type="radio" name="gender" value="Male" required />
+                  <span>Male</span>
+                </label>
+                <label class="choice female">
+                  <input type="radio" name="gender" value="Female" required />
+                  <span>Female</span>
+                </label>
+              </div>
+            </fieldset>
+            <label class="field">
+              <span>DOB</span>
+              <input type="date" name="dob" required />
+            </label>
+            <label class="field">
+              <span>Residence start date</span>
+              <input type="date" name="residence_start" required />
+            </label>
+            <label class="field">
+              <span>Permanent Parish &amp; Place</span>
+              <input name="permanent_parish" maxlength="160" required placeholder="St. Sebastian Church, Bendur" />
+            </label>
+            <label class="field">
+              <span>Diocese</span>
+              <input name="diocese" maxlength="120" required placeholder="Diocese of Mangalore" />
+            </label>
+            <label class="field">
+              <span>Registration date</span>
+              <input type="date" id="registrationDate" name="registration_date" required />
+            </label>
+            <p class="hint">Filled automatically with today's date. Change it when you are entering an earlier record.</p>
+            <div class="actions span-2">
+              <button class="btn" id="saveBtn" type="submit">Save member</button>
+              <button class="btn ghost" id="clearBtn" type="button">Clear</button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <section id="view-members" class="view">
+        <header class="view-head">
+          <h1>Parish members</h1>
+          <p class="lede">Search by baptism name, house name, father's name, or mother's name.</p>
+        </header>
+        <div class="search">
+          <input id="search" type="search" placeholder="Search by baptism name, house name, father's name, or mother's name" maxlength="80" />
+        </div>
+        <div id="empty" class="card empty" hidden>
+          <img src="emblem.png" alt="" class="emblem" />
+          <p id="emptyText">No members yet. Register the first person to begin the parish record.</p>
+        </div>
+        <div id="tableWrap" class="card table-wrap" hidden>
+          <table>
+            <thead>
+              <tr>
+                <th>Baptism Name with House name</th>
+                <th>Father's name</th>
+                <th>Mother's name</th>
+                <th>Gender</th>
+                <th>Residence start date</th>
+                <th>Permanent Parish &amp; Diocese</th>
+                <th>DOB</th>
+                <th>Registration date</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="memberRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="view-certificate" class="view">
+        <header class="view-head no-print">
+          <h1>Residence certificate</h1>
+          <p class="lede">Temporary residence and parish membership, filled from the register. The date is today.</p>
+        </header>
+        <div class="cert-layout">
+          <div class="card cert-controls no-print">
+            <label class="field">
+              <span>Find a member</span>
+              <input id="certSearch" type="search" placeholder="Search by any name" maxlength="80" />
+            </label>
+            <ul id="certResults" class="picks"></ul>
+            <p id="certSummary" class="summary">No member selected.</p>
+            <label class="field">
+              <span>Ref No</span>
+              <input id="refNo" maxlength="40" placeholder="Leave blank to write by hand" />
+            </label>
+            <label class="field">
+              <span>Purpose</span>
+              <select id="purpose">
+                <option value="">Select a purpose</option>
+                <option>Marriage preparation</option>
+                <option>Permanent Parish Record</option>
+                <option>Higher Studies</option>
+                <option>Employment verification</option>
+                <option value="__other">Other purpose</option>
+              </select>
+            </label>
+            <label class="field" id="purposeOtherWrap" hidden>
+              <span>Other purpose</span>
+              <input id="purposeOther" maxlength="160" placeholder="Why this certificate is requested" />
+            </label>
+            <p class="fact">Certificate date <strong id="issueDateLabel"></strong> and the residence end date are filled automatically.</p>
+            <p id="printHint" class="hint"></p>
+            <button class="btn" id="printBtn" type="button" disabled>Print certificate</button>
+          </div>
+          <div class="paper-wrap">
+            <article class="paper" id="paper">
+              <header class="letterhead">
+                <svg class="cross" viewBox="0 0 100 140" aria-hidden="true">
+                  <path fill="currentColor" d="M24 4 H76 L64 20 V40 H78 L96 28 V80 L78 68 H64 V118 L76 136 H24 L36 118 V68 H22 L4 80 V28 L22 40 H36 V20 Z" />
+                </svg>
+                <h1 id="certChurch"></h1>
+                <p id="certAddress"></p>
+                <p id="certEparchy"></p>
+                <p id="certContact"></p>
+                <div class="meta">
+                  <span>Ref No: <strong id="certRef"></strong></span>
+                  <span>Date: <strong id="certDate"></strong></span>
+                </div>
+              </header>
+              <h2 id="certTitle"></h2>
+              <p id="certPara1" class="placeholder"></p>
+              <p id="certPara2" hidden></p>
+              <footer class="signoff">
+                <div class="seal" id="certSeal"></div>
+                <div class="sign" id="certSign"></div>
+              </footer>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-settings" class="view">
+        <header class="view-head">
+          <h1>Parish settings</h1>
+          <p class="lede">The certificate prints the parish email you save here. The register itself stays on this computer.</p>
+        </header>
+        <div class="settings-grid">
+          <form id="emailForm" class="card">
+            <img src="emblem.png" alt="Gold cross of St. Alphonsa Church" class="emblem" />
+            <label class="field">
+              <span>Parish email</span>
+              <input id="parishEmail" type="email" maxlength="120" placeholder="office@parish.example" />
+            </label>
+            <p class="hint">Until an email is saved, the certificate shows [Insert Parish Email] and printing stays off.</p>
+            <button class="btn" type="submit">Save email</button>
+          </form>
+          <div class="card">
+            <h2>Database on this computer</h2>
+            <p class="path" id="dbPath"></p>
+            <p><strong id="settingsCount">0</strong> members saved.</p>
+            <div class="actions">
+              <button class="btn" id="backupBtn" type="button">Backup database</button>
+              <button class="btn ghost" id="restoreBtn" type="button">Restore backup</button>
+            </div>
+            <p class="hint">A backup is a single file you can keep or move to another computer that has this app.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+  <div id="modal" class="modal" hidden>
+    <div class="modal-card card" role="dialog" aria-modal="true" aria-labelledby="modalText">
+      <p id="modalText"></p>
+      <div class="actions">
+        <button id="modalCancel" class="btn ghost" type="button">Cancel</button>
+        <button id="modalOk" class="btn danger" type="button">Remove</button>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

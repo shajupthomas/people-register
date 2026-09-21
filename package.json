@@ -1,0 +1,65 @@
+{
+  "name": "peoples-register",
+  "productName": "People's Register",
+  "version": "1.0.0",
+  "description": "Parish people's register and temporary residence certificates for St. Alphonsa Syro-Malabar Church, Kankanady.",
+  "main": "main.js",
+  "author": "St. Alphonsa Syro-Malabar Church, Kankanady",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test src/certificate.test.js src/db.test.js src/ui-contract.test.js",
+    "icons": "python3 scripts/make-icons.py",
+    "dist:win": "electron-builder --win --x64"
+  },
+  "dependencies": {
+    "sql.js": "^1.12.0"
+  },
+  "devDependencies": {
+    "electron": "^35.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.stalphonsa.peoplesregister",
+    "productName": "People's Register",
+    "copyright": "Copyright © St. Alphonsa Syro-Malabar Church, Kankanady",
+    "directories": {
+      "output": "dist"
+    },
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/sql.js/dist/sql-wasm.wasm"
+    ],
+    "files": [
+      "**/*",
+      "!dist/**",
+      "!scripts/**",
+      "!src/**/*.test.js",
+      "!**/*.md"
+    ],
+    "win": {
+      "icon": "assets/icon.ico",
+      "executableName": "PeoplesRegister",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "People's Register",
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico",
+      "deleteAppDataOnUninstall": false,
+      "runAfterFinish": true
+    },
+    "artifactName": "PeoplesRegister-Setup-${version}.${ext}"
+  }
+}
